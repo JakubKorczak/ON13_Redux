@@ -1,25 +1,57 @@
-import logo from './logo.svg';
-import './App.css';
+import { useDispatch, useSelector } from "react-redux";
+import { decrement, increment } from "./redux/actions/counterActions";
+import { loggedIn, loggedOut } from "./redux/actions/authActions";
 
-function App() {
+const App = () => {
+  // 🏦 state
+  const counter = useSelector((state) => state.counterValue.counter);
+  // 🏦 state
+  const auth = useSelector((state) => state.auth);
+
+  // 🚚 dispatch
+  const dispatch = useDispatch();
+
+  const handleIncrement = () => {
+    // 🚚 dispatch
+    dispatch(increment);
+  };
+
+  const handleDecrement = () => {
+    // 🚚 dispatch
+    dispatch(decrement(3));
+  };
+
+  const handleLoggedIn = () => {
+    // 🚚 dispatch
+    dispatch(
+      loggedIn({
+        name: "Bob",
+        username: "Bobber",
+      })
+    );
+  };
+
+  const handleLoggedOut = () => {
+    // 🚚 dispatch
+    dispatch(loggedOut());
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <div>
+      {auth.isLoggedIn ? (
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Zalogowany - {auth.user.name} {auth.user.username}
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      ) : (
+        <p>Nie zalogowany</p>
+      )}
+      {counter}
+      <button onClick={handleIncrement}>increment</button>
+      <button onClick={handleDecrement}>decrement</button>
+      <button onClick={handleLoggedIn}>Zaloguj</button>
+      <button onClick={handleLoggedOut}>Wyloguj</button>
     </div>
   );
-}
+};
 
 export default App;
