@@ -1,6 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
-import { decrement, increment } from "./redux/actions/counterActions";
-import { loggedIn, loggedOut } from "./redux/actions/authActions";
+// import { decrement } from "./redux/actions/counterActions";
+// import { loggedIn, loggedOut } from "./redux/actions/authActions";
+import { decrement, increment } from "./redux/reducers/counterReducer";
+import { loggedIn, loggedOut } from "./redux/reducers/authReducer";
+import TaskList from "./components/taskList/TaskList";
+import TaskForm from "./components/taskForm/TaskForm";
 
 const App = () => {
   // 🏦 state
@@ -13,12 +17,12 @@ const App = () => {
 
   const handleIncrement = () => {
     // 🚚 dispatch
-    dispatch(increment);
+    dispatch(increment());
   };
 
   const handleDecrement = () => {
     // 🚚 dispatch
-    dispatch(decrement(3));
+    dispatch(decrement(5));
   };
 
   const handleLoggedIn = () => {
@@ -50,6 +54,10 @@ const App = () => {
       <button onClick={handleDecrement}>decrement</button>
       <button onClick={handleLoggedIn}>Zaloguj</button>
       <button onClick={handleLoggedOut}>Wyloguj</button>
+      <br />
+      <hr />
+      <TaskForm />
+      <TaskList />
     </div>
   );
 };

@@ -1,10 +1,12 @@
+import { createAction } from "@reduxjs/toolkit";
+
 // 📝 action type
 export const INCREMENT = "INCREMENT";
 export const DECREMENT = "DECREMENT";
 
-export const increment = {
-  type: INCREMENT,
-};
+// export const increment = {
+//   type: INCREMENT,
+// };
 
 // export const decrement = {
 //   type: DECREMENT,
@@ -19,7 +21,10 @@ export const increment = {
 // }
 
 // 🛠️ action creator
-export const decrement = (payload) => ({
-  type: DECREMENT,
-  payload, // 📦 action payload
-});
+// export const decrement = (payload) => ({
+//   type: DECREMENT,
+//   payload, // 📦 action payload
+// });
+
+export const increment = createAction(INCREMENT);
+export const decrement = createAction(DECREMENT);
