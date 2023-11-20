@@ -1,63 +1,72 @@
 import { useDispatch, useSelector } from "react-redux";
-// import { decrement } from "./redux/actions/counterActions";
-// import { loggedIn, loggedOut } from "./redux/actions/authActions";
-import { decrement, increment } from "./redux/reducers/counterReducer";
-import { loggedIn, loggedOut } from "./redux/reducers/authReducer";
-import TaskList from "./components/taskList/TaskList";
-import TaskForm from "./components/taskForm/TaskForm";
+import {
+  addTask,
+  deleteTask,
+  fetchLocations,
+  fetchTasks,
+  toggleTask,
+} from "./redux/reducers/operations";
+import { useState } from "react";
 
 const App = () => {
-  // 🏦 state
-  const counter = useSelector((state) => state.counterValue.counter);
-  // 🏦 state
-  const auth = useSelector((state) => state.auth);
-
-  // 🚚 dispatch
+  const [taskName, setTaskName] = useState("");
   const dispatch = useDispatch();
+  const {
+    isLoading: isLoadingLocations,
+    error: errorLocations,
+    locations,
+  } = useSelector((state) => state.locations);
+  const { isLoading, error, items } = useSelector((state) => state.tasks);
 
-  const handleIncrement = () => {
-    // 🚚 dispatch
-    dispatch(increment());
+  const handleGetLocation = () => {
+    dispatch(fetchLocations());
   };
 
-  const handleDecrement = () => {
-    // 🚚 dispatch
-    dispatch(decrement(5));
+  const handleGetTasks = () => {
+    dispatch(fetchTasks("jakies dane"));
   };
 
-  const handleLoggedIn = () => {
-    // 🚚 dispatch
-    dispatch(
-      loggedIn({
-        name: "Bob",
-        username: "Bobber",
-      })
-    );
+  const handleDeleteTask = (id) => {
+    dispatch(deleteTask(id));
   };
 
-  const handleLoggedOut = () => {
-    // 🚚 dispatch
-    dispatch(loggedOut());
+  const handleToggle = (task) => {
+    dispatch(toggleTask(task));
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(addTask(taskName));
+  };
+
+  if (isLoadingLocations || isLoading) return <p>loading...</p>;
+  if (errorLocations || error) return <p>error...</p>;
 
   return (
     <div>
-      {auth.isLoggedIn ? (
-        <p>
-          Zalogowany - {auth.user.name} {auth.user.username}
-        </p>
-      ) : (
-        <p>Nie zalogowany</p>
-      )}
-      {counter}
-      <button onClick={handleIncrement}>increment</button>
-      <button onClick={handleDecrement}>decrement</button>
-      <button onClick={handleLoggedIn}>Zaloguj</button>
-      <button onClick={handleLoggedOut}>Wyloguj</button>
-      <br />
-      <hr />
-      <TaskForm />
-      <TaskList />
+      <button onClick={handleGetLocation}>Pobierz lokalizacje</button>
+      <button onClick={handleGetTasks}>Pobierz taski</button>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={taskName}
+          onChange={(e) => setTaskName(e.target.value)}
+        />
+      </form>
+      {locations?.results.map((loc) => (
+        <p>{loc.name}</p>
+      ))}
+      {items.map((item) => (
+        <div>
+          <div>
+            {item.text}{" "}
+            <button onClick={() => handleDeleteTask(item.id)}>Usuń</button>
+            <button onClick={() => handleToggle(item)}>
+              Zmien status - {item.completed ? "completed" : "not completed"}
+            </button>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

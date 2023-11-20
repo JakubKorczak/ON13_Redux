@@ -1,53 +1,84 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { nanoid } from "nanoid";
+import { addTask, deleteTask, fetchTasks, toggleTask } from "./operations";
 
-const taskSlice = createSlice({
-  name: "task",
-  initialState: [
-    {
-      id: 1,
-      name: "Task 1",
-      active: true,
-    },
-    {
-      id: 2,
-      name: "Task 2",
-      active: true,
-    },
-    {
-      id: 3,
-      name: "Task 3",
-      active: false,
-    },
-  ],
-  reducers: {
-    addTask: {
-      reducer: (state, action) => {
-        state.push(action.payload);
-      },
-      prepare: (name) => {
-        return {
-          payload: {
-            name,
-            id: nanoid(),
-            active: true,
-          },
-        };
-      },
-    },
-    removeTask: (state, action) => {
-      return state.filter((task) => task.id !== action.payload);
-    },
-    toggleTask: (state, action) => {
-      return state.map((task) => {
-        if (task.id === action.payload) {
-          return { ...task, active: !task.active };
-        }
-        return task;
+const tasksSlice = createSlice({
+  name: "tasks",
+  initialState: {
+    items: [],
+    isLoading: false,
+    error: null,
+  },
+  // extraReducers: {
+  //   [fetchTasks.pending]: (state, action) => {
+  //     state.isLoading = true;
+  //   },
+  //   [fetchTasks.fulfilled]: (state, action) => {
+  //     state.isLoading = false;
+  //     state.items = action.payload;
+  //     state.error = null;
+  //   },
+  //   [fetchTasks.rejected]: (state, action) => {
+  //     state.isLoading = false;
+  //     state.error = action.payload;
+  //   },
+  // },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchTasks.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchTasks.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.items = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchTasks.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteTask.pending, (state, action) => {
+        // state.isLoading = true;
+      })
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        console.log(action.payload);
+        // state.isLoading = false;
+        state.error = null;
+        state.items = state.items.filter(
+          (item) => item.id !== action.payload.id
+        );
+      })
+      .addCase(deleteTask.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(addTask.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(addTask.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.items.push(action.payload);
+      })
+      .addCase(addTask.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(toggleTask.pending, (state, action) => {
+        // state.isLoading = true;
+      })
+      .addCase(toggleTask.fulfilled, (state, action) => {
+        // state.isLoading = false;
+        const index = state.items.findIndex(
+          (item) => item.id === action.payload.id
+        );
+        state.error = null;
+        state.items.splice(index, 1, action.payload);
+      })
+      .addCase(toggleTask.rejected, (state, action) => {
+        // state.isLoading = false;
+        state.error = action.payload;
       });
-    },
   },
 });
 
-export const { addTask, removeTask, toggleTask } = taskSlice.actions;
-export default taskSlice.reducer;
+export const tasksReducer = tasksSlice.reducer;
