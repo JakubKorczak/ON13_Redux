@@ -8,20 +8,6 @@ const tasksSlice = createSlice({
     isLoading: false,
     error: null,
   },
-  // extraReducers: {
-  //   [fetchTasks.pending]: (state, action) => {
-  //     state.isLoading = true;
-  //   },
-  //   [fetchTasks.fulfilled]: (state, action) => {
-  //     state.isLoading = false;
-  //     state.items = action.payload;
-  //     state.error = null;
-  //   },
-  //   [fetchTasks.rejected]: (state, action) => {
-  //     state.isLoading = false;
-  //     state.error = action.payload;
-  //   },
-  // },
   extraReducers: (builder) => {
     builder
       .addCase(fetchTasks.pending, (state, action) => {
