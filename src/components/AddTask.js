@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { addTask } from "../redux/reducers/operations";
+import { addTask } from "../redux/reducers/tasks/operations";
 import { useState } from "react";
 
 export default function AddTask() {

@@ -1,17 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
 import Task from "./Task";
-import { fetchTasks } from "../redux/reducers/operations";
+import { fetchTasks } from "../redux/reducers/tasks/operations";
 import { useEffect } from "react";
 import {
   selectTasksError,
   selectTasksIsLoading,
-  selectVisibleTasks,
+  selectTasksItems,
 } from "../redux/selectors";
 
 export default function TasksList() {
   const isLoading = useSelector(selectTasksIsLoading);
   const error = useSelector(selectTasksError);
-  const visibleTasks = useSelector(selectVisibleTasks);
+  const tasks = useSelector(selectTasksItems);
 
   const dispatch = useDispatch();
 
@@ -24,7 +24,7 @@ export default function TasksList() {
   return (
     <div>
       {isLoading && <p>loading...</p>}
-      {visibleTasks.map((item) => (
+      {tasks.map((item) => (
         <Task key={item.id} item={item} />
       ))}
     </div>

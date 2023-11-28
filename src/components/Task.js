@@ -1,4 +1,4 @@
-import { deleteTask, toggleTask } from "../redux/reducers/operations";
+import { deleteTask } from "../redux/reducers/tasks/operations";
 import { useDispatch } from "react-redux";
 
 export default function Task({ item }) {
@@ -6,10 +6,6 @@ export default function Task({ item }) {
 
   const handleDeleteTask = (id) => {
     dispatch(deleteTask(id));
-  };
-
-  const handleToggle = (task) => {
-    dispatch(toggleTask(task));
   };
 
   return (
@@ -31,12 +27,6 @@ export default function Task({ item }) {
             className="btn btn-danger"
           >
             Usuń
-          </button>
-          <button
-            onClick={() => handleToggle(item)}
-            className="btn btn-warning"
-          >
-            {!item.completed ? "Zakończ" : "Aktywuj"}
           </button>
         </div>
       </div>
