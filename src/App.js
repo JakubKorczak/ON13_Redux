@@ -1,5 +1,3 @@
-import TasksList from "./components/TasksList";
-import AddTask from "./components/AddTask";
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Login from "./components/Login";
@@ -8,8 +6,18 @@ import Tasks from "./components/Tasks";
 import Home from "./components/Home";
 import PrivateRoute from "./components/PrivateRoute";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { me } from "./redux/reducers/auth/operation";
+import { selectIsRefreshing } from "./redux/reducers/auth/selectors";
 
 const App = () => {
+  const dispatch = useDispatch();
+  const isRefreshing = useSelector(selectIsRefreshing);
+  useEffect(() => {
+    dispatch(me());
+  }, [dispatch]);
+  if (isRefreshing) return <p>loading...</p>;
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
@@ -27,8 +35,6 @@ const App = () => {
           element={<PrivateRoute element={<Tasks />} redirect="/login" />}
         />
       </Route>
-      {/* <AddTask />
-      <TasksList /> */}
     </Routes>
   );
 };
